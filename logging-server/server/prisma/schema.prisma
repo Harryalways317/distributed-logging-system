@@ -9,3 +9,12 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model log {
+  id        Int      @id @default(autoincrement())
+  machineId String?  @db.Text
+  timestamp DateTime @default(now()) @db.Timestamp
+  logLevel  String?  @db.Text // enum
+  message   String   @db.Text
+  requestId Int?
+}
