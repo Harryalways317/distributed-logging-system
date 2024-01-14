@@ -6,3 +6,5 @@ interface Log{
     message: string,
     request_id: number
 }
+
+export { Log}
