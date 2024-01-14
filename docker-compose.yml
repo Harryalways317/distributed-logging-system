@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  database:
+    image: postgres:14.0-alpine
+    restart: always
+    command: -p 5433
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: logs_db
+    expose:
+      - 5433
+    ports:
+      # to avoid conflict with default port of postgres
+      - "5433:5433"
+
+  logging_server:
+    container_name: logging_server
+    build:
+      context: logging_server/server
+      dockerfile: Dockerfile
+      target: prod
+    restart: always
+    depends_on:
+      - database
+    environment:
+      PORT: 8000
+      DATABASE_URL: postgres://postgres:password@database:5433/logs_db?sslmode=disable?schema=public
+    expose:
+      - 8000
+    ports:
+      - "8000:8000"
